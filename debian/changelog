@@ -1,0 +1,5 @@
+python-smpp-twisted (0.2-1) unstable; urgency=low
+
+  * Initial debianization
+
+ -- Eugene Agafonov <e.a.agafonov@gmail.com>  Wed, 07 Dec 2011 12:36:30 +0400

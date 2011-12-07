@@ -1,0 +1,55 @@
+#! /usr/bin/make -f
+
+SHELL = /bin/bash
+
+# all versions
+PYVERS	:= $(shell pyversions -vs)
+VER	:= $(shell /usr/bin/python -c 'import sys; print sys.version[:3]')
+
+build: build-stamp
+build-stamp: $(PYVERS:%=build-python%)
+	touch $@
+build-python%:
+	python$* setup.py build
+	touch $@
+
+clean:
+	rm -rf *-stamp build-python* build
+	rm -rf $(addprefix debian/,$(packages)) debian/files debian/substvars
+	rm -rf _trial_temp test.log
+	find . -name "*.pyc" |xargs -r rm
+	dh_clean
+
+install: build-stamp install-prereq $(PYVERS:%=install-python%) install-nover
+
+install-prereq: build-stamp
+	dh_testdir
+	dh_testroot
+	dh_clean -k
+
+install-python%: install-prereq
+	: # python-smpp-twisted
+	python$* setup.py install --root=debian/python-smpp-twisted --install-layout=deb
+	-find debian/python-smpp-twisted -name '*.py[co]' | xargs rm -f
+
+install-nover:
+	: # python-smpp-twisted
+
+binary-indep: build install
+	dh_testdir
+	dh_testroot
+	dh_installchangelogs -i
+	dh_installmenu -i
+	dh_compress -i -X.py
+	dh_fixperms -i
+	dh_python2 -i
+	dh_installdeb -i
+	dh_gencontrol -i
+	dh_md5sums -i
+	dh_builddeb -i
+
+binary-arch: build install
+# nothing to do
+
+binary: binary-indep binary-arch
+.PHONY: build clean binary-indep binary-arch binary install install-nover install-prereq

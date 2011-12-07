@@ -1,0 +1,15 @@
+Source: python-smpp-twisted
+Section: python
+Priority: extra
+Maintainer: Eugene Agafonov <e.a.agafonov@gmail.com>
+Build-Depends: debhelper (>= 8.0.0), python-all (>= 2.6.6), python-setuptools
+Standards-Version: 3.9.2
+Homepage: https://github.com/mozes/smpp.twisted
+Vcs-Git: git://github.com/eagafonov/smpp.twisted.git
+Vcs-Browser: https://github.com/eagafonov/smpp.twisted
+
+Package: python-smpp-twisted
+Architecture: all
+Depends: ${misc:Depends}, python-smpp-pdu (>= 0.2)
+Description: SMPP 3.4 client built on Twisted
+ SMPP 3.4 client built on Twisted

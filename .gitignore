@@ -7,3 +7,9 @@ _trial_temp
 *.swp
 build/
 dist/
+build*
+debian/python-smpp-twisted
+debian/*.debhelper*
+debian/*.substvars
+debian/files
+
