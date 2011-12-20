@@ -31,6 +31,7 @@ install-python%: install-prereq
 	: # python-smpp-twisted
 	python$* setup.py install --root=debian/python-smpp-twisted --install-layout=deb
 	-find debian/python-smpp-twisted -name '*.py[co]' | xargs rm -f
+	rm debian/python-smpp-twisted/usr/lib/python$*/dist-packages/smpp/__init__.py
 
 install-nover:
 	: # python-smpp-twisted
