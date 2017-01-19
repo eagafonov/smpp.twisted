@@ -67,14 +67,14 @@ class SMPPClientBase(object):
         self.smpp = None
         self.bindDeferred = None
 
-    def connect(self):
+    def connect(self, bindAddress=None):
         factory = SMPPClientFactory(self.config)
         if self.config.useSSL:
             self.log.warning('Establishing SSL connection to %s:%d' % (self.config.host, self.config.port))
-            reactor.connectSSL(self.config.host, self.config.port, factory, CtxFactory(self.config))
+            reactor.connectSSL(self.config.host, self.config.port, factory, CtxFactory(self.config), bindAddress=bindAddress)
         else:
             self.log.warning('Establishing TCP connection to %s:%d' % (self.config.host, self.config.port))
-            reactor.connectTCP(self.config.host, self.config.port, factory) 
+            reactor.connectTCP(self.config.host, self.config.port, factory, bindAddress=bindAddress)
         return factory.buildProtocolDeferred.addCallback(self.onConnect)
     
     def onConnect(self, smpp):
@@ -82,10 +82,10 @@ class SMPPClientBase(object):
         if self.msgHandler is not None:
             smpp.setDataRequestHandler(self.msgHandler)
         return smpp
-        
-    def connectAndBind(self):
+
+    def connectAndBind(self, bindAddress=None):
         self.bindDeferred = defer.Deferred()
-        self.connect().addCallback(self.doBind).addErrback(self.bindDeferred.errback)
+        self.connect(bindAddress=bindAddress).addCallback(self.doBind).addErrback(self.bindDeferred.errback)
         return self.bindDeferred
         
     def doBind(self, smpp):
